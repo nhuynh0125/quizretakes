@@ -7,6 +7,6 @@
     <startSkipDay>21</startSkipDay>
     <endSkipMonth>1</endSkipMonth>
     <endSkipDay>25</endSkipDay>
-    <dataLocation>/var/www/CS/webapps/offutt/WEB-INF/data/</dataLocation>
+    <dataLocation>/Users/keith/Documents/Spring2019/swe437/hw1/quizretakes/</dataLocation>
   </course>
 </courses>
