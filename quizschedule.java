@@ -182,14 +182,13 @@ public class quizschedule {
 
 		boolean retakePrinted = false;
 
-		System.out.println(" GMU quiz retake scheduler for class " + course.getCourseTitle());
+		System.out.println("\nGMU quiz retake scheduler for class " + course.getCourseTitle());
 
 		// print the main form
 		// System.out.println("<form name='quizSchedule' method='post' action='" +
 		// thisServlet + "?courseID=" + courseID + "' >");
-		System.out.print("\nYou can sign up for quiz retakes within the next two weeks. ");
-		System.out.print("Enter your name (as it appears on the class roster), ");
-		System.out.print("then select which date, time, and quiz you wish to retake from the following list.");
+		System.out.print(
+				"\nYou can sign up for quiz retakes within the next two weeks. Enter your name (as it appears on the class roster), then select which date, time, and quiz you wish to retake from the following list.");
 
 		LocalDate today = LocalDate.now();
 		LocalDate endDay = today.plusDays(new Long(daysAvailable));
@@ -200,9 +199,9 @@ public class quizschedule {
 			skip = true;
 		}
 
-		System.out.print("\nToday is ");
+		System.out.println("\nToday is ");
 		System.out.println((today.getDayOfWeek()) + ", " + today.getMonth() + " " + today.getDayOfMonth());
-		System.out.print("\nCurrently scheduling quizzes for the next two weeks, until ");
+		System.out.println("\nCurrently scheduling quizzes for the next two weeks, until ");
 		System.out.println((endDay.getDayOfWeek()) + ", " + endDay.getMonth() + " " + endDay.getDayOfMonth());
 
 		for (retakeBean r : retakesList) {
@@ -255,16 +254,18 @@ public class quizschedule {
 		}
 
 		// get name
-		System.out.print("\nName: ");
+		System.out.println("\nEnter your name: ");
 		String studentName = getInput();
 		// get selections
-		System.out.println("Select quiz retake opportunities: (Put spaces between them, end with -1)");
+		System.out.print("Select quiz retake opportunities (Put spaces between them): ");
 
 		ArrayList<Integer> selections = new ArrayList<>();
 		getSelections(selections);
 		String[] retakeOpps = new String[selections.size()];
+
 		int i = 1;
 		int j = 0;
+
 		for (retakeBean r : retakesList) {
 			if (i == selections.get(j)) {
 				retakeOpps[j] = r.toString();
@@ -281,19 +282,28 @@ public class quizschedule {
 	}
 
 	public void getSelections(ArrayList<Integer> selections) {
-		Scanner kb = new Scanner(System.in);
+		String input = getInput();
+		Scanner kb = new Scanner(input);
 
 		while (kb.hasNext()) {
-			int num = kb.nextInt();
-			if (num == -1)
-				break;
-
-			selections.add(num);
+			selections.add(kb.nextInt());
 		}
+
 	}
 
 	public String getInput() {
 		Scanner kb = new Scanner(System.in);
-		return kb.next();
+		return kb.nextLine();
+	}
+
+	public static void main(String[] args) {
+
+		quizschedule q = new quizschedule();
+		Scanner kb = new Scanner(System.in);
+
+		System.out.print("Enter course ID: ");
+		String courseID = kb.next();
+
+		q.doGet(courseID);
 	}
 }

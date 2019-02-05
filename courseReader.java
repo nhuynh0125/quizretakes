@@ -5,14 +5,17 @@
 
 package quizretakes;
 
-import java.time.*;
+// These classes read the sample XML file and manage output:
+import java.io.File;
 import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
+import java.time.LocalDate;
+import java.time.Year;
 
 // XML parsers are so needy
 // package dom; // in the documentation I found
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,37 +23,32 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-// These classes read the sample XML file and manage output:
-import java.io.File;
-
 public class courseReader {
 
 	public courseBean read(String filename) throws IOException, ParserConfigurationException, SAXException {
 		courseBean course = null;
 
-		System.out.println("In course Reader, fileName: " + filename);
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(new File(filename));
 
-		System.out.println("In course Reader");
 		// Get all the nodes
 		NodeList nodeList = document.getDocumentElement().getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			System.out.println("course Reader, i=" + i);
 			// XML structure is simple--6 elements
 			// Not validating the data values
 			Node node = nodeList.item(i);
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				System.out.println("course Reader, in if");
 				Element elem = (Element) node;
 
 				// quiz IDs should be unique
 				String courseID = elem.getElementsByTagName("courseID").item(0).getChildNodes().item(0).getNodeValue();
-				System.out.println("course Reader, courseID: " + courseID);
-				String courseTitle = elem.getElementsByTagName("courseTitle").item(0).getChildNodes().item(0).getNodeValue();
-				String retakeDuration = elem.getElementsByTagName("retakeDuration").item(0).getChildNodes().item(0).getNodeValue();
-				String dataLocation = elem.getElementsByTagName("dataLocation").item(0).getChildNodes().item(0).getNodeValue();
+				String courseTitle = elem.getElementsByTagName("courseTitle").item(0).getChildNodes().item(0)
+						.getNodeValue();
+				String retakeDuration = elem.getElementsByTagName("retakeDuration").item(0).getChildNodes().item(0)
+						.getNodeValue();
+				String dataLocation = elem.getElementsByTagName("dataLocation").item(0).getChildNodes().item(0)
+						.getNodeValue();
 
 				// startSkipMonth is an integer 1..12
 				Integer startSkipMonth = Integer.parseInt(
