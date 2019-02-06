@@ -241,8 +241,6 @@ public class quizschedule {
 		ArrayList<Integer> selections = new ArrayList<Integer>();
 		getSelections(selections);
 		//size if 2, first location is 0, not 1
-		System.out.println("Selection size is" + selections.size());
-		System.out.println(selections.get(0).toString());
 		String[] retakeOpps = new String[selections.size()];
 
 		int j = 0;
