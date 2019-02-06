@@ -1,7 +1,4 @@
-//As of Feb 6th, 2019 at 12:10am
-//Need to fix that the input for quiz will only take 2 number, as in retakeID and quizID, without ","
-//otherwise the modified version is working, with perfectly printing in format 1,2,xxx
-package quizschedule;
+package quizretakes;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,7 +31,7 @@ public class quizschedule {
 	// location maps to /webapps/offutt/WEB-INF/data/ from a terminal window.
 
 	// change dataLocation to your own file directory
-	private static final String dataLocation = "/Users/vanes/Desktop/quizretakes-master/";
+	private static final String dataLocation = "/Users/ryanvo1/Downloads/quizretakes/";
 	static private final String separator = ",";
 	private static final String courseBase = "course";
 	private static final String quizzesBase = "quiz-orig";
@@ -48,7 +45,7 @@ public class quizschedule {
 	private String apptsFileName;
 
 	// Passed as parameter and stored in course.xml file (format: "swe437")
-	private String courseID;
+	private static String courseID;
 	// Stored in course.xml file, default 14
 	// Number of days a retake is offered after the quiz is given
 	private int daysAvailable = 14;
@@ -57,7 +54,6 @@ public class quizschedule {
 	private String thisServlet = "";
 
 // doGet() : Prints the form to schedule a retake
-
 	public void doGet(String courseID) {
 		// what is printewriter for?
 		// PrintWriter out = response.getWriter();
@@ -93,9 +89,9 @@ public class quizschedule {
 				printQuizScheduleForm(quizList, retakesList, course);
 
 			} catch (Exception e) {
+				String message = "Can't find the data files for course ID " + courseID + ". You can try again.";
 			}
-		} else {
-					}
+		} 
 	}
 
 	/*
@@ -162,6 +158,7 @@ public class quizschedule {
 		}
 			}
 
+	//print out the quiz schedule
 	public void printQuizScheduleForm(quizzes quizList, retakes retakesList, courseBean course) {
 		boolean skip = false;
 		LocalDate startSkip = course.getStartSkip();
@@ -236,11 +233,11 @@ public class quizschedule {
 		System.out.println("\nEnter your name: ");
 		String studentName = getInput();
 		// get selections
-		System.out.print("Select quiz retake opportunities (Put spaces between them): ");
+		System.out.print("Select quiz retake opportunities (put space between retakeID and quizID): ");
 
 		ArrayList<Integer> selections = new ArrayList<Integer>();
 		getSelections(selections);
-		//size if 2, first location is 0, not 1
+		
 		String[] retakeOpps = new String[selections.size()];
 
 		int j = 0;
@@ -256,7 +253,8 @@ public class quizschedule {
 		}
 	}
 
-
+	
+	//read the retakeID and quizID entered by the user
 	public void getSelections(ArrayList<Integer> selections) {
 		String input = getInput();
 		Scanner kb = new Scanner(input);
@@ -267,6 +265,7 @@ public class quizschedule {
 
 	}
 
+	//read input from the user
 	public String getInput() {
 		Scanner kb = new Scanner(System.in);
 		return kb.nextLine();
@@ -278,7 +277,7 @@ public class quizschedule {
 		Scanner kb = new Scanner(System.in);
 
 		System.out.print("Enter course ID: ");
-		String courseID = kb.next();
+		q.courseID = kb.next();
 
 		q.doGet(courseID);
 	}
