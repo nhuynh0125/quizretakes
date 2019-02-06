@@ -1,5 +1,7 @@
-// JO 3-Jan-2019
-package quizretakes;
+//As of Feb 6th, 2019 at 12:10am
+//Need to fix that the input for quiz will only take 2 number, as in retakeID and quizID, without ","
+//otherwise the modified version is working, with perfectly printing in format 1,2,xxx
+package quizschedule;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,13 +29,12 @@ import java.util.Scanner;
  *         Data file of when retakes are given
  */
 
-//public class quizschedule extends HttpServlet {
 public class quizschedule {
 	// Data files
 	// location maps to /webapps/offutt/WEB-INF/data/ from a terminal window.
 
 	// change dataLocation to your own file directory
-	private static final String dataLocation = "/Users/keith/Documents/Spring2019/swe437/hw1/quizretakes/";
+	private static final String dataLocation = "/Users/vanes/Desktop/quizretakes-master/";
 	static private final String separator = ",";
 	private static final String courseBase = "course";
 	private static final String quizzesBase = "quiz-orig";
@@ -92,13 +93,9 @@ public class quizschedule {
 				printQuizScheduleForm(quizList, retakesList, course);
 
 			} catch (Exception e) {
-				// String message = "<p>Can't find the data files for course ID " + courseID +
-				// ". You can try again.";
-				// servletUtils.printNeedCourseID(out, thisServlet, message);
 			}
 		} else {
-			// servletUtils.printNeedCourseID(out, thisServlet, "");
-		}
+					}
 	}
 
 	/*
@@ -118,10 +115,6 @@ public class quizschedule {
 		// String studentName = request.getParameter("studentName");
 		// String[] allIDs = request.getParameterValues("retakeReqs");
 
-		// response.setContentType("text/html");
-		// PrintWriter out = response.getWriter();
-		// servletUtils.printHeader(out);
-		// System.out.println("<body bgcolor=\"#DDEEDD\">");
 
 		if (allIDs != null && studentName != null && studentName.length() > 0) {
 			// Append the new appointment to the file
@@ -135,8 +128,10 @@ public class quizschedule {
 					BufferedWriter bw = new BufferedWriter(fw);
 
 					for (String oneIDPair : allIDs) {
-						bw.write(oneIDPair + separator + studentName + "\n");
+						//bw.write(oneIDPair + separator + studentName + "\n");
+						bw.write(oneIDPair + separator);
 					}
+					bw.write(studentName + "\n");
 
 					bw.flush();
 					bw.close();
@@ -164,16 +159,8 @@ public class quizschedule {
 			if (studentName == null || studentName.length() == 0)
 				System.out.println("You didn't give a name ... no anonymous quiz retakes.");
 
-			// thisServlet = (request.getRequestURL()).toString();
-			// CS server has a flaw--requires https & 8443, but puts http & 8080 on the
-			// requestURL
-			// thisServlet = thisServlet.replace("http", "https");
-			// thisServlet = thisServlet.replace("8080", "8443");
-			// System.out.println("<p><a href='" + thisServlet + "?courseID=" + courseID +
-			// "'>You can try again if you like.</a>");
 		}
-		// servletUtils.printFooter(out);
-	}
+			}
 
 	public void printQuizScheduleForm(quizzes quizList, retakes retakesList, courseBean course) {
 		boolean skip = false;
@@ -231,20 +218,12 @@ public class quizschedule {
 
 					if (!quizDay.isAfter(retakeDay) && !retakeDay.isAfter(lastAvailableDay) && !today.isAfter(retakeDay)
 							&& !retakeDay.isAfter(endDay)) {
-						// System.out.println("\n" + q.getID() + "r" + r.getID() + "'>Quiz " + q.getID()
-						// + " from " + quizDay.getDayOfWeek() + ", " + quizDay.getMonth() + " " +
-						// quizDay.getDayOfMonth());
-						// Value is "retakeID:quiziD"
-						// System.out.println("\n" + r.getID() + separator + q.getID() + "' id='q" +
-						// q.getID() + "r"+ r.getID() + "'>");
 						System.out.println("\nQuiz " + q.getID() + " from " + quizDay.getDayOfWeek() + ", "
 								+ quizDay.getMonth() + " " + quizDay.getDayOfMonth());
 					}
 				}
 			}
 			if (retakePrinted) {
-				// System.out.println(" </table>");
-				// System.out.println(" <tr><td>");
 				retakePrinted = false;
 			}
 		}
@@ -259,19 +238,17 @@ public class quizschedule {
 		// get selections
 		System.out.print("Select quiz retake opportunities (Put spaces between them): ");
 
-		ArrayList<Integer> selections = new ArrayList<>();
+		ArrayList<Integer> selections = new ArrayList<Integer>();
 		getSelections(selections);
+		//size if 2, first location is 0, not 1
+		System.out.println("Selection size is" + selections.size());
+		System.out.println(selections.get(0).toString());
 		String[] retakeOpps = new String[selections.size()];
 
-		int i = 1;
 		int j = 0;
-
-		for (retakeBean r : retakesList) {
-			if (i == selections.get(j)) {
-				retakeOpps[j] = r.toString();
-				j++;
-			}
-			i++;
+		for(int i = 0; i < selections.size(); i++) {
+			retakeOpps[j] = selections.get(i).toString();
+			j++;
 		}
 
 		try {
@@ -280,6 +257,7 @@ public class quizschedule {
 			e.printStackTrace();
 		}
 	}
+
 
 	public void getSelections(ArrayList<Integer> selections) {
 		String input = getInput();
