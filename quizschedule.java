@@ -31,12 +31,13 @@ public class quizschedule {
 	// location maps to /webapps/offutt/WEB-INF/data/ from a terminal window.
 
 	// change dataLocation to your own file directory
-	private static final String dataLocation = "/Users/ryanvo1/Downloads/quizretakes/";
+	private static final String dataLocation = "/Users/ryanvo1/Documents/SWE 437/quizretakes/";
 	static private final String separator = ",";
 	private static final String courseBase = "course";
 	private static final String quizzesBase = "quiz-orig";
 	private static final String retakesBase = "quiz-retakes";
 	private static final String apptsBase = "quiz-appts";
+	private static final String password = "password"; //for professor use only
 
 	// Filenames to be built from above and the courseID parameter
 	private String courseFileName;
@@ -230,7 +231,7 @@ public class quizschedule {
 		}
 
 		// get name
-		System.out.println("\nEnter your name: ");
+		System.out.println("\nEnter your name (first and last name): ");
 		String studentName = getInput();
 		// get selections
 		System.out.print("Select quiz retake opportunities (put space between retakeID and quizID): ");
@@ -270,6 +271,51 @@ public class quizschedule {
 		Scanner kb = new Scanner(System.in);
 		return kb.nextLine();
 	}
+	
+	@SuppressWarnings("unchecked")
+	//display all appointments on CL
+	public void displayAllAppointments(){
+	
+		apptsFileName = dataLocation + apptsBase + "-" + courseID + ".txt";
+		retakesFileName = dataLocation + retakesBase + "-" + courseID + ".xml";
+		
+		ArrayList<apptBean> appts = new ArrayList<apptBean>();
+		retakes retakesList = new retakes();
+		
+		//read all appointments from the output file
+		try{
+			apptsReader ar = new apptsReader();
+			appts = ar.read(apptsFileName);
+			
+			retakesReader rr = new retakesReader();
+			retakesList = rr.read(retakesFileName);
+		} catch (Exception e) {
+			String message = "Can't find the data files for course ID " + courseID + ". You can try again.";
+		}
+		
+		//print each appointment at a time
+		for(int i = 0; i < appts.size(); i++){
+		
+			apptBean newAppt = appts.get(i);
+			
+			//print student's name and quizID first
+			System.out.println("Student's name: " + newAppt.getName()); 
+			System.out.println("Quiz " + newAppt.getQuizID());
+			
+			int retakeID = newAppt.getRetakeID();
+			
+			//print information associated with the retakeID
+			int j = 1;
+			int k = 0;
+			for(retakeBean r : retakesList){
+				if(j == retakeID){
+					System.out.println("Session: " + r.toString() + "\n");
+					k++;
+				}
+				j++;
+			}
+		}
+	}
 
 	public static void main(String[] args) {
 
@@ -278,7 +324,32 @@ public class quizschedule {
 
 		System.out.print("Enter course ID: ");
 		q.courseID = kb.next();
-
-		q.doGet(courseID);
+		
+		int input = 0;
+		
+		do{
+			System.out.println("(For student use) Enter 1 to schedule a new quiz retake:");
+			System.out.println("(For professor use) Enter 2 to see all quiz retake appointments:");
+			
+			input = kb.nextInt();
+			
+			if(input == 1){
+				q.doGet(courseID);
+			}
+			else if(input == 2){
+				System.out.println("Please enter the password: ");
+				String password = kb.next();
+				//check password here
+				if(password.equals(q.password)){
+					q.displayAllAppointments();
+				}
+				else{
+					System.out.println("Wrong password! Failed to log in.");
+				}
+			}
+			else{
+				System.out.println("Invalid input! Try again.\n");
+			}	
+		}while(input != 1 && input != 2);
 	}
 }
