@@ -12,7 +12,7 @@
  * user to see the list of who's registered retakes.
  * It will prompt for password, and the password is "password"
  */
-package quizschedule;
+package quizretakes;
 
 import java.io.BufferedWriter;
 import java.io.File;
