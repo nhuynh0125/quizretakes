@@ -1,3 +1,17 @@
+/**
+ * @author Ngoc Huynh, Quang Vo, Keith Saldana
+ * Date: February 12, 2019
+ * Due Date: February 15, 2019
+ * Assignment 3 is to evolve the quizretake app, 
+ * to provide an interface view for professors to see who has scheduled retakes.
+ * The new view should read data written by the scheduler and display 
+ * them in a readable way
+ * If GTA wants to compile and run this, please make sure the package's name
+ * and the dataLocation's path are both changed
+ * There will be a menu with two options, choosing option 2 will allow
+ * user to see the list of who's registered retakes.
+ * It will prompt for password, and the password is "password"
+ */
 package quizretakes;
 
 import java.io.BufferedWriter;
@@ -8,30 +22,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * @author Jeff Offutt Date: January, 2019
- *
- *         Wiring the pieces together: quizschedule.java -- Servlet entry point
- *         for students to schedule quizzes quizReader.java -- reads XML file
- *         and stores in quizzes. Used by quizschedule.java quizzes.java -- A
- *         list of quizzes from the XML file Used by quizschedule.java
- *         quizBean.java -- A simple quiz bean Used by quizzes.java and
- *         readQuizzesXML.java retakesReader.java -- reads XML file and stores
- *         in retakes. Used by quizschedule.java retakes.java -- A list of
- *         retakes from the XML file Used by quizschedule.java retakeBean.java
- *         -- A simple retake bean Used by retakes.java and readRetakesXML.java
- *         apptBean.java -- A bean to hold appointments
- * 
- *         quizzes.xml -- Data file of when quizzes were given retakes.xml --
- *         Data file of when retakes are given
- */
-
 public class quizschedule {
 	// Data files
 	// location maps to /webapps/offutt/WEB-INF/data/ from a terminal window.
 
 	// change dataLocation to your own file directory
-	private static final String dataLocation = "/Users/ryanvo1/Documents/SWE 437/quizretakes/";
+	private static final String dataLocation = "/Users/vanes/Desktop/quizretakes-master/";
 	static private final String separator = ",";
 	private static final String courseBase = "course";
 	private static final String quizzesBase = "quiz-orig";
@@ -54,7 +50,7 @@ public class quizschedule {
 	// To be set by getRequestURL()
 	private String thisServlet = "";
 
-// doGet() : Prints the form to schedule a retake
+	// doGet() : Prints the form to schedule a retake
 	public void doGet(String courseID) {
 		// what is printewriter for?
 		// PrintWriter out = response.getWriter();
@@ -141,7 +137,8 @@ public class quizschedule {
 			// Respond to the student
 			if (IOerrFlag) {
 				System.out.println(IOerrMessage);
-			} else {
+			} 
+			else {
 				if (allIDs.length == 1)
 					System.out.println(studentName + ", your appointment has been scheduled.");
 				else
@@ -150,14 +147,14 @@ public class quizschedule {
 				System.out.println("If you cannot make it, please cancel by sending email to your professor.");
 			}
 
-		} else { // allIDs == null or name is null
+		} 
+		else { // allIDs == null or name is null
 			if (allIDs == null)
 				System.out.println("You didn't choose any quizzes to retake.");
 			if (studentName == null || studentName.length() == 0)
 				System.out.println("You didn't give a name ... no anonymous quiz retakes.");
-
 		}
-			}
+	}
 
 	//print out the quiz schedule
 	public void printQuizScheduleForm(quizzes quizList, retakes retakesList, courseBean course) {
@@ -238,7 +235,7 @@ public class quizschedule {
 
 		ArrayList<Integer> selections = new ArrayList<Integer>();
 		getSelections(selections);
-		
+
 		String[] retakeOpps = new String[selections.size()];
 
 		int j = 0;
@@ -254,7 +251,7 @@ public class quizschedule {
 		}
 	}
 
-	
+
 	//read the retakeID and quizID entered by the user
 	public void getSelections(ArrayList<Integer> selections) {
 		String input = getInput();
@@ -271,39 +268,39 @@ public class quizschedule {
 		Scanner kb = new Scanner(System.in);
 		return kb.nextLine();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	//display all appointments on CL
 	public void displayAllAppointments(){
-	
+
 		apptsFileName = dataLocation + apptsBase + "-" + courseID + ".txt";
 		retakesFileName = dataLocation + retakesBase + "-" + courseID + ".xml";
-		
+
 		ArrayList<apptBean> appts = new ArrayList<apptBean>();
 		retakes retakesList = new retakes();
-		
+
 		//read all appointments from the output file
 		try{
 			apptsReader ar = new apptsReader();
 			appts = ar.read(apptsFileName);
-			
+
 			retakesReader rr = new retakesReader();
 			retakesList = rr.read(retakesFileName);
 		} catch (Exception e) {
 			String message = "Can't find the data files for course ID " + courseID + ". You can try again.";
 		}
-		
+
 		//print each appointment at a time
 		for(int i = 0; i < appts.size(); i++){
-		
+
 			apptBean newAppt = appts.get(i);
-			
+
 			//print student's name and quizID first
 			System.out.println("Student's name: " + newAppt.getName()); 
 			System.out.println("Quiz " + newAppt.getQuizID());
-			
+
 			int retakeID = newAppt.getRetakeID();
-			
+
 			//print information associated with the retakeID
 			int j = 1;
 			int k = 0;
@@ -324,15 +321,15 @@ public class quizschedule {
 
 		System.out.print("Enter course ID: ");
 		q.courseID = kb.next();
-		
+
 		int input = 0;
-		
+
 		do{
 			System.out.println("(For student use) Enter 1 to schedule a new quiz retake:");
 			System.out.println("(For professor use) Enter 2 to see all quiz retake appointments:");
-			
+
 			input = kb.nextInt();
-			
+
 			if(input == 1){
 				q.doGet(courseID);
 			}
@@ -350,6 +347,6 @@ public class quizschedule {
 			else{
 				System.out.println("Invalid input! Try again.\n");
 			}	
-		}while(input != 1 && input != 2);
+		} while(input != 1 && input != 2);
 	}
 }
